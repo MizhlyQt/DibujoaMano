@@ -20,19 +20,43 @@ def predictDigit(image):
     result = np.argmax(pred[0])
     return result
 
-# Streamlit 
+# Streamlit configuration
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
 st.title('Reconocimiento de Dígitos escritos a mano')
-st.subheader("Dibuja el digito en el panel  y presiona  'Predecir'")
+st.subheader("Dibuja el digito en el panel y presiona 'Predecir'")
 
-# Add canvas component
-# Specify canvas parameters in application
-drawing_mode = "freedraw"
-stroke_width = st.slider('Selecciona el ancho de línea', 1, 30, 15)
-stroke_color = '#FFFFFF' # Set background color to white
-bg_color = '#000000'
+# Sidebar for customization options
+with st.sidebar:
+    st.title("Configuración de Dibujo")
+    
+    # Color picker for stroke color
+    stroke_color = st.color_picker(
+        'Selecciona el color del trazo', 
+        '#FFFFFF',  # Default white
+        key='stroke_color_picker'
+    )
+    
+    # Slider for stroke width
+    stroke_width = st.slider(
+        'Selecciona el ancho de línea', 
+        1, 30, 15,
+        key='stroke_width_slider'
+    )
+    
+    # Background color picker
+    bg_color = st.color_picker(
+        'Selecciona el color de fondo', 
+        '#000000',  # Default black
+        key='bg_color_picker'
+    )
+    
+    st.title("Acerca de:")
+    st.text("En esta aplicación se evalua ")
+    st.text("la capacidad de un RNA de reconocer") 
+    st.text("digitos escritos a mano.")
+    st.text("Basado en desarrollo de Vinay Uniyal")
 
-# Create a canvas component
+# Create canvas component with customizable settings
 canvas_result = st_canvas(
     fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
     stroke_width=stroke_width,
@@ -40,6 +64,7 @@ canvas_result = st_canvas(
     background_color=bg_color,
     height=200,
     width=200,
+    drawing_mode="freedraw",
     key="canvas",
 )
 
@@ -54,12 +79,3 @@ if st.button('Predecir'):
         st.header('El Digito es : ' + str(res))
     else:
         st.header('Por favor dibuja en el canvas el digito.')
-
-# Add sidebar
-st.sidebar.title("Acerca de:")
-st.sidebar.text("En esta aplicación se evalua ")
-st.sidebar.text("la capacidad de un RNA de reconocer") 
-st.sidebar.text("digitos escritos a mano.")
-st.sidebar.text("Basado en desarrollo de Vinay Uniyal")
-#st.sidebar.text("GitHub Repository")
-#st.sidebar.write("[GitHub Repo Link](https://github.com/Vinay2022/Handwritten-Digit-Recognition)")
