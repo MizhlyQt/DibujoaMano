@@ -26,7 +26,7 @@ st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layo
 # Aplicar el fondo de color con CSS directamente
 css = """
 body {
-    background-color: #f0f0f0; /* Cambia este color al que prefieras */
+    background-color: #74bdaf; /* Cambia este color al que prefieras */
 }
 """
 st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
