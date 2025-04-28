@@ -23,16 +23,19 @@ def predictDigit(image):
 # Streamlit configuration
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
 
-# Aplicar el fondo de color con CSS directamente
-css = """
-body {
-    background-color: #74bdaf; /* Cambia este color al que prefieras */
+# Aplicar el fondo de imagen con CSS
+page_bg_img = """
+<style>
+[data-testid="stAppViewContainer"] {
+    background-image: url("https://img.freepik.com/free-vector/stylish-hexagonal-line-pattern-background_1017-19742.jpg");
+    background-size: cover;
 }
+</style>
 """
-st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
 st.title('Reconocimiento de Dígitos escritos a mano')
-st.subheader("Dibuja el digito en el panel y presiona 'Predecir'")
+st.subheader("Dibuja el dígito en el panel y presiona 'Predecir'")
 
 # Sidebar for customization options
 with st.sidebar:
