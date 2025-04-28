@@ -1,6 +1,8 @@
 import tensorflow as tf
 from PIL import Image, ImageOps
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 
@@ -11,6 +13,8 @@ def predictDigit(image):
     img = image.resize((28,28))
     img = np.array(img, dtype='float32')
     img = img/255
+    plt.imshow(img)
+    plt.show()
     img = img.reshape((1,28,28,1))
     pred = model.predict(img)
     result = np.argmax(pred[0])
@@ -19,35 +23,16 @@ def predictDigit(image):
 # Streamlit configuration
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
 
-# Custom CSS to fix the grey rectangles
-st.markdown("""
+# Aplicar el fondo de imagen con CSS
+page_bg_img = """
 <style>
-    /* Main app background */
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://static.vecteezy.com/system/resources/previews/008/218/160/non_2x/horizontal-topographic-map-black-topographer-seamless-pattern-dark-typography-linear-background-for-mapping-and-audio-equalizer-backdrop-illustration-vector.jpg");
-        background-size: cover;
-    }
-    
-    /* Remove grey containers */
-    [data-testid="stVerticalBlock"] {
-        background-color: transparent !important;
-        padding: 0 !important;
-    }
-    
-    /* Style the canvas container */
-    .canvas-container {
-        background-color: transparent;
-        padding: 0;
-        margin: 0 auto;
-        width: fit-content;
-    }
-    
-    /* Style the button container */
-    [data-testid="stHorizontalBlock"] {
-        background-color: transparent !important;
-    }
+[data-testid="stAppViewContainer"] {
+    background-image: url("https://static.vecteezy.com/system/resources/previews/008/218/160/non_2x/horizontal-topographic-map-black-topographer-seamless-pattern-dark-typography-linear-background-for-mapping-and-audio-equalizer-backdrop-illustration-vector.jpg");
+    background-size: cover;
+}
 </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
 st.title('Reconocimiento de Dígitos escritos a mano')
 st.subheader("Dibuja el dígito en el panel y presiona 'Predecir'")
@@ -77,22 +62,17 @@ with st.sidebar:
         key='bg_color_picker'
     )
 
-# Create a container for the canvas to better control styling
-with st.container():
-    st.markdown('<div class="canvas-container">', unsafe_allow_html=True)
-    
-    canvas_result = st_canvas(
-        fill_color="rgba(255, 165, 0, 0.3)",
-        stroke_width=stroke_width,
-        stroke_color=stroke_color,
-        background_color=bg_color,
-        height=200,
-        width=200,
-        drawing_mode="freedraw",
-        key="canvas",
-    )
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+# Create canvas component with customizable settings
+canvas_result = st_canvas(
+    fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+    stroke_width=stroke_width,
+    stroke_color=stroke_color,
+    background_color=bg_color,
+    height=200,
+    width=200,
+    drawing_mode="freedraw",
+    key="canvas",
+)
 
 # Add "Predict Now" button
 if st.button('Predecir'):
