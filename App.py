@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 
-# App
+# Función para predecir el dígito
 def predictDigit(image):
     model = tf.keras.models.load_model("model/handwritten.h5")
     image = ImageOps.grayscale(image)
@@ -20,10 +20,10 @@ def predictDigit(image):
     result = np.argmax(pred[0])
     return result
 
-# Streamlit configuration
+# Configuración de la página
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
 
-# Aplicar el fondo de imagen con CSS
+# Fondo de la página
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] {
@@ -34,54 +34,41 @@ page_bg_img = """
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
+# Títulos principales
 st.title('Reconocimiento de Dígitos escritos a mano')
 st.subheader("Dibuja el dígito en el panel y presiona 'Predecir'")
 
-# Sidebar for customization options
+# Sidebar para configuración del dibujo
 with st.sidebar:
     st.title("Configuración de Dibujo")
     
-    # Color picker for stroke color
-    stroke_color = st.color_picker(
-        'Selecciona el color del trazo', 
-        '#FFFFFF',  # Default white
-        key='stroke_color_picker'
-    )
-    
-    # Slider for stroke width
-    stroke_width = st.slider(
-        'Selecciona el ancho de línea', 
-        1, 30, 15,
-        key='stroke_width_slider'
-    )
-    
-    # Background color picker
-    bg_color = st.color_picker(
-        'Selecciona el color de fondo', 
-        '#000000',  # Default black
-        key='bg_color_picker'
+    stroke_color = st.color_picker('Selecciona el color del trazo', '#FFFFFF', key='stroke_color_picker')
+    stroke_width = st.slider('Selecciona el ancho de línea', 1, 30, 15, key='stroke_width_slider')
+    bg_color = st.color_picker('Selecciona el color de fondo', '#000000', key='bg_color_picker')
+
+# Crear columnas para centrar el canvas
+col1, col2, col3 = st.columns([1, 2, 1])  # Columnas para centrar el canvas
+
+with col2:  # Canvas en la columna central
+    canvas_result = st_canvas(
+        fill_color="rgba(255, 165, 0, 0.3)",
+        stroke_width=stroke_width,
+        stroke_color=stroke_color,
+        background_color=bg_color,
+        height=300,  # Puedes ajustar a 300 si quieres que sea un poquito más grande
+        width=300,
+        drawing_mode="freedraw",
+        key="canvas",
     )
 
-# Create canvas component with customizable settings
-canvas_result = st_canvas(
-    fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
-    stroke_width=stroke_width,
-    stroke_color=stroke_color,
-    background_color=bg_color,
-    height=200,
-    width=200,
-    drawing_mode="freedraw",
-    key="canvas",
-)
-
-# Add "Predict Now" button
-if st.button('Predecir'):
-    if canvas_result.image_data is not None:
-        input_numpy_array = np.array(canvas_result.image_data)
-        input_image = Image.fromarray(input_numpy_array.astype('uint8'), 'RGBA')
-        input_image.save('prediction/img.png')
-        img = Image.open("prediction/img.png")
-        res = predictDigit(img)
-        st.header('El Dígito es : ' + str(res))
-    else:
-        st.header('Por favor dibuja en el canvas el dígito.')
+    # Botón para predecir
+    if st.button('Predecir'):
+        if canvas_result.image_data is not None:
+            input_numpy_array = np.array(canvas_result.image_data)
+            input_image = Image.fromarray(input_numpy_array.astype('uint8'), 'RGBA')
+            input_image.save('prediction/img.png')
+            img = Image.open("prediction/img.png")
+            res = predictDigit(img)
+            st.header('El Dígito es : ' + str(res))
+        else:
+            st.header('Por favor dibuja en el canvas el dígito.')
