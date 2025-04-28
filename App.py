@@ -16,12 +16,21 @@ def predictDigit(image):
     plt.imshow(img)
     plt.show()
     img = img.reshape((1,28,28,1))
-    pred= model.predict(img)
+    pred = model.predict(img)
     result = np.argmax(pred[0])
     return result
 
 # Streamlit configuration
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
+
+# Aplicar el fondo de color con CSS directamente
+css = """
+body {
+    background-color: #f0f0f0; /* Cambia este color al que prefieras */
+}
+"""
+st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
 st.title('Reconocimiento de Dígitos escritos a mano')
 st.subheader("Dibuja el digito en el panel y presiona 'Predecir'")
 
@@ -49,12 +58,6 @@ with st.sidebar:
         '#000000',  # Default black
         key='bg_color_picker'
     )
-    
-    st.title("Acerca de:")
-    st.text("En esta aplicación se evalua ")
-    st.text("la capacidad de un RNA de reconocer") 
-    st.text("digitos escritos a mano.")
-    st.text("Basado en desarrollo de Vinay Uniyal")
 
 # Create canvas component with customizable settings
 canvas_result = st_canvas(
@@ -72,10 +75,10 @@ canvas_result = st_canvas(
 if st.button('Predecir'):
     if canvas_result.image_data is not None:
         input_numpy_array = np.array(canvas_result.image_data)
-        input_image = Image.fromarray(input_numpy_array.astype('uint8'),'RGBA')
+        input_image = Image.fromarray(input_numpy_array.astype('uint8'), 'RGBA')
         input_image.save('prediction/img.png')
         img = Image.open("prediction/img.png")
         res = predictDigit(img)
-        st.header('El Digito es : ' + str(res))
+        st.header('El Dígito es : ' + str(res))
     else:
-        st.header('Por favor dibuja en el canvas el digito.')
+        st.header('Por favor dibuja en el canvas el dígito.')
