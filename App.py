@@ -23,7 +23,7 @@ def predictDigit(image):
 # Streamlit configuration
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
 
-# Aplicar el fondo de imagen y eliminar el rectángulo gris
+# CSS para personalizar el fondo y el tablero
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] {
@@ -33,8 +33,10 @@ page_bg_img = """
     background-attachment: fixed;
 }
 
-[data-testid="stHeader"], [data-testid="stToolbar"], .css-1v3fvcr {
-    background-color: rgba(0, 0, 0, 0); /* Hace transparente el encabezado y otros contenedores */
+[data-testid="stCanvas"] {
+    background-color: rgba(255, 255, 255, 0.8); /* Cambia el color del fondo del tablero */
+    box-shadow: none; /* Elimina sombras */
+    border-radius: 0px; /* Ajusta bordes (puedes eliminar completamente) */
 }
 </style>
 """
