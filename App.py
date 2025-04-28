@@ -79,7 +79,7 @@ with col2:
         stroke_color=stroke_color,
         background_color=bg_color,
         height=400,
-        width=400,
+        width=700,
         drawing_mode="freedraw",
         key="canvas",
     )
