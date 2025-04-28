@@ -30,12 +30,21 @@ page_bg_img = """
     background-image: url("https://static.vecteezy.com/system/resources/previews/008/218/160/non_2x/horizontal-topographic-map-black-topographer-seamless-pattern-dark-typography-linear-background-for-mapping-and-audio-equalizer-backdrop-illustration-vector.jpg");
     background-size: cover;
 }
+h1, h2, button, .stButton>button {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-st.title('Reconocimiento de Dígitos escritos a mano')
-st.subheader("Dibuja el dígito en el panel y presiona 'Predecir'")
+# Crear columnas para centrar el contenido
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    st.title('Reconocimiento de Dígitos escritos a mano')
+    st.subheader("Dibuja el dígito en el panel y presiona 'Predecir'")
 
 # Sidebar for customization options
 with st.sidebar:
@@ -62,26 +71,27 @@ with st.sidebar:
         key='bg_color_picker'
     )
 
-# Create canvas component with customizable settings
-canvas_result = st_canvas(
-    fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
-    stroke_width=stroke_width,
-    stroke_color=stroke_color,
-    background_color=bg_color,
-    height=400,
-    width=400,
-    drawing_mode="freedraw",
-    key="canvas",
-)
+with col2:
+    # Create canvas component with customizable settings
+    canvas_result = st_canvas(
+        fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+        stroke_width=stroke_width,
+        stroke_color=stroke_color,
+        background_color=bg_color,
+        height=400,
+        width=400,
+        drawing_mode="freedraw",
+        key="canvas",
+    )
 
-# Add "Predict Now" button
-if st.button('Predecir'):
-    if canvas_result.image_data is not None:
-        input_numpy_array = np.array(canvas_result.image_data)
-        input_image = Image.fromarray(input_numpy_array.astype('uint8'), 'RGBA')
-        input_image.save('prediction/img.png')
-        img = Image.open("prediction/img.png")
-        res = predictDigit(img)
-        st.header('El Dígito es : ' + str(res))
-    else:
-        st.header('Por favor dibuja en el canvas el dígito.')
+    # Add "Predict Now" button
+    if st.button('Predecir'):
+        if canvas_result.image_data is not None:
+            input_numpy_array = np.array(canvas_result.image_data)
+            input_image = Image.fromarray(input_numpy_array.astype('uint8'), 'RGBA')
+            input_image.save('prediction/img.png')
+            img = Image.open("prediction/img.png")
+            res = predictDigit(img)
+            st.header('El Dígito es : ' + str(res))
+        else:
+            st.header('Por favor dibuja en el canvas el dígito.')
