@@ -23,12 +23,18 @@ def predictDigit(image):
 # Streamlit configuration
 st.set_page_config(page_title='Reconocimiento de Dígitos escritos a mano', layout='wide')
 
-# Aplicar el fondo de imagen con CSS
+# Aplicar el fondo de imagen y eliminar el rectángulo gris
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background-image: url("https://img.freepik.com/free-vector/stylish-hexagonal-line-pattern-background_1017-19742.jpg");
+    background-image: url("https://static.vecteezy.com/system/resources/previews/008/218/160/non_2x/horizontal-topographic-map-black-topographer-seamless-pattern-dark-typography-linear-background-for-mapping-and-audio-equalizer-backdrop-illustration-vector.jpg");
     background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+[data-testid="stHeader"], [data-testid="stToolbar"], .css-1v3fvcr {
+    background-color: rgba(0, 0, 0, 0); /* Hace transparente el encabezado y otros contenedores */
 }
 </style>
 """
